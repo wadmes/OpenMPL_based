@@ -1,0 +1,701 @@
+[
+	{
+		"id": "90",
+		"conflict_degree":5,
+		"stitch_degree":0,
+		"conflict": [
+			{"id": "89"},
+			{"id": "91"},
+			{"id": "93"},
+			{"id": "95"},
+			{"id": "96"}
+		],
+		"stitch": []
+	},
+	{
+		"id": "91",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "90"},
+			{"id": "93"},
+			{"id": "94"},
+			{"id": "96"}
+		],
+		"stitch": [
+			{"id": "92"}
+		]
+	},
+	{
+		"id": "92",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "93"},
+			{"id": "94"},
+			{"id": "96"},
+			{"id": "97"}
+		],
+		"stitch": [
+			{"id": "91"}
+		]
+	},
+	{
+		"id": "93",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "90"},
+			{"id": "91"},
+			{"id": "92"},
+			{"id": "99"}
+		],
+		"stitch": [
+			{"id": "94"}
+		]
+	},
+	{
+		"id": "94",
+		"conflict_degree":5,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "91"},
+			{"id": "92"},
+			{"id": "97"},
+			{"id": "98"},
+			{"id": "99"}
+		],
+		"stitch": [
+			{"id": "93"}
+		]
+	},
+	{
+		"id": "95",
+		"conflict_degree":3,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "89"},
+			{"id": "90"},
+			{"id": "100"}
+		],
+		"stitch": [
+			{"id": "96"}
+		]
+	},
+	{
+		"id": "96",
+		"conflict_degree":6,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "89"},
+			{"id": "90"},
+			{"id": "91"},
+			{"id": "92"},
+			{"id": "100"},
+			{"id": "102"}
+		],
+		"stitch": [
+			{"id": "95"},
+			{"id": "97"}
+		]
+	},
+	{
+		"id": "97",
+		"conflict_degree":6,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "92"},
+			{"id": "94"},
+			{"id": "101"},
+			{"id": "102"},
+			{"id": "103"},
+			{"id": "104"}
+		],
+		"stitch": [
+			{"id": "96"},
+			{"id": "98"}
+		]
+	},
+	{
+		"id": "98",
+		"conflict_degree":2,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "94"},
+			{"id": "103"}
+		],
+		"stitch": [
+			{"id": "97"},
+			{"id": "99"}
+		]
+	},
+	{
+		"id": "99",
+		"conflict_degree":2,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "93"},
+			{"id": "94"}
+		],
+		"stitch": [
+			{"id": "98"}
+		]
+	},
+	{
+		"id": "140",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "139"},
+			{"id": "146"},
+			{"id": "160"},
+			{"id": "162"}
+		],
+		"stitch": [
+			{"id": "141"}
+		]
+	},
+	{
+		"id": "141",
+		"conflict_degree":2,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "146"},
+			{"id": "170"}
+		],
+		"stitch": [
+			{"id": "140"},
+			{"id": "142"}
+		]
+	},
+	{
+		"id": "142",
+		"conflict_degree":2,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "168"},
+			{"id": "170"}
+		],
+		"stitch": [
+			{"id": "141"},
+			{"id": "143"}
+		]
+	},
+	{
+		"id": "143",
+		"conflict_degree":5,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "147"},
+			{"id": "148"},
+			{"id": "167"},
+			{"id": "168"},
+			{"id": "170"}
+		],
+		"stitch": [
+			{"id": "142"},
+			{"id": "144"}
+		]
+	},
+	{
+		"id": "144",
+		"conflict_degree":5,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "147"},
+			{"id": "148"},
+			{"id": "159"},
+			{"id": "160"},
+			{"id": "161"}
+		],
+		"stitch": [
+			{"id": "143"},
+			{"id": "145"}
+		]
+	},
+	{
+		"id": "145",
+		"conflict_degree":3,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "159"},
+			{"id": "160"},
+			{"id": "161"}
+		],
+		"stitch": [
+			{"id": "144"}
+		]
+	},
+	{
+		"id": "147",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "143"},
+			{"id": "144"},
+			{"id": "168"},
+			{"id": "169"}
+		],
+		"stitch": [
+			{"id": "148"}
+		]
+	},
+	{
+		"id": "148",
+		"conflict_degree":5,
+		"stitch_degree":3,
+		"conflict": [
+			{"id": "143"},
+			{"id": "144"},
+			{"id": "158"},
+			{"id": "168"},
+			{"id": "169"}
+		],
+		"stitch": [
+			{"id": "147"},
+			{"id": "149"},
+			{"id": "151"}
+		]
+	},
+	{
+		"id": "149",
+		"conflict_degree":5,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "152"},
+			{"id": "159"},
+			{"id": "163"},
+			{"id": "164"},
+			{"id": "169"}
+		],
+		"stitch": [
+			{"id": "148"},
+			{"id": "150"}
+		]
+	},
+	{
+		"id": "150",
+		"conflict_degree":1,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "152"}
+		],
+		"stitch": [
+			{"id": "149"}
+		]
+	},
+	{
+		"id": "151",
+		"conflict_degree":2,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "158"},
+			{"id": "169"}
+		],
+		"stitch": [
+			{"id": "148"}
+		]
+	},
+	{
+		"id": "159",
+		"conflict_degree":6,
+		"stitch_degree":0,
+		"conflict": [
+			{"id": "144"},
+			{"id": "145"},
+			{"id": "149"},
+			{"id": "161"},
+			{"id": "163"},
+			{"id": "164"}
+		],
+		"stitch": []
+	},
+	{
+		"id": "160",
+		"conflict_degree":6,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "140"},
+			{"id": "144"},
+			{"id": "145"},
+			{"id": "162"},
+			{"id": "163"},
+			{"id": "167"}
+		],
+		"stitch": [
+			{"id": "161"}
+		]
+	},
+	{
+		"id": "161",
+		"conflict_degree":5,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "144"},
+			{"id": "145"},
+			{"id": "159"},
+			{"id": "163"},
+			{"id": "167"}
+		],
+		"stitch": [
+			{"id": "160"}
+		]
+	},
+	{
+		"id": "162",
+		"conflict_degree":3,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "140"},
+			{"id": "160"},
+			{"id": "166"}
+		],
+		"stitch": [
+			{"id": "163"}
+		]
+	},
+	{
+		"id": "163",
+		"conflict_degree":6,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "149"},
+			{"id": "159"},
+			{"id": "160"},
+			{"id": "161"},
+			{"id": "165"},
+			{"id": "166"}
+		],
+		"stitch": [
+			{"id": "162"},
+			{"id": "164"}
+		]
+	},
+	{
+		"id": "164",
+		"conflict_degree":3,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "149"},
+			{"id": "159"},
+			{"id": "165"}
+		],
+		"stitch": [
+			{"id": "163"}
+		]
+	},
+	{
+		"id": "717",
+		"conflict_degree":5,
+		"stitch_degree":0,
+		"conflict": [
+			{"id": "716"},
+			{"id": "718"},
+			{"id": "720"},
+			{"id": "721"},
+			{"id": "756"}
+		],
+		"stitch": []
+	},
+	{
+		"id": "718",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "717"},
+			{"id": "721"},
+			{"id": "756"},
+			{"id": "757"}
+		],
+		"stitch": [
+			{"id": "719"}
+		]
+	},
+	{
+		"id": "719",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "721"},
+			{"id": "722"},
+			{"id": "756"},
+			{"id": "757"}
+		],
+		"stitch": [
+			{"id": "718"}
+		]
+	},
+	{
+		"id": "720",
+		"conflict_degree":3,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "716"},
+			{"id": "717"},
+			{"id": "726"}
+		],
+		"stitch": [
+			{"id": "721"}
+		]
+	},
+	{
+		"id": "721",
+		"conflict_degree":6,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "716"},
+			{"id": "717"},
+			{"id": "718"},
+			{"id": "719"},
+			{"id": "725"},
+			{"id": "726"}
+		],
+		"stitch": [
+			{"id": "720"},
+			{"id": "722"}
+		]
+	},
+	{
+		"id": "722",
+		"conflict_degree":6,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "719"},
+			{"id": "725"},
+			{"id": "727"},
+			{"id": "728"},
+			{"id": "755"},
+			{"id": "757"}
+		],
+		"stitch": [
+			{"id": "721"},
+			{"id": "723"}
+		]
+	},
+	{
+		"id": "723",
+		"conflict_degree":2,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "755"},
+			{"id": "757"}
+		],
+		"stitch": [
+			{"id": "722"},
+			{"id": "724"}
+		]
+	},
+	{
+		"id": "724",
+		"conflict_degree":2,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "756"},
+			{"id": "757"}
+		],
+		"stitch": [
+			{"id": "723"}
+		]
+	},
+	{
+		"id": "756",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "717"},
+			{"id": "718"},
+			{"id": "719"},
+			{"id": "724"}
+		],
+		"stitch": [
+			{"id": "757"}
+		]
+	},
+	{
+		"id": "757",
+		"conflict_degree":5,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "718"},
+			{"id": "719"},
+			{"id": "722"},
+			{"id": "723"},
+			{"id": "724"}
+		],
+		"stitch": [
+			{"id": "756"}
+		]
+	},
+	{
+		"id": "905",
+		"conflict_degree":2,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "902"},
+			{"id": "904"}
+		],
+		"stitch": [
+			{"id": "906"}
+		]
+	},
+	{
+		"id": "906",
+		"conflict_degree":2,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "904"},
+			{"id": "917"}
+		],
+		"stitch": [
+			{"id": "905"},
+			{"id": "907"}
+		]
+	},
+	{
+		"id": "907",
+		"conflict_degree":8,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "902"},
+			{"id": "904"},
+			{"id": "908"},
+			{"id": "909"},
+			{"id": "915"},
+			{"id": "917"},
+			{"id": "941"},
+			{"id": "942"}
+		],
+		"stitch": [
+			{"id": "906"}
+		]
+	},
+	{
+		"id": "908",
+		"conflict_degree":3,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "907"},
+			{"id": "915"},
+			{"id": "941"}
+		],
+		"stitch": [
+			{"id": "909"}
+		]
+	},
+	{
+		"id": "909",
+		"conflict_degree":5,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "907"},
+			{"id": "913"},
+			{"id": "915"},
+			{"id": "916"},
+			{"id": "941"}
+		],
+		"stitch": [
+			{"id": "908"},
+			{"id": "910"}
+		]
+	},
+	{
+		"id": "910",
+		"conflict_degree":5,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "913"},
+			{"id": "914"},
+			{"id": "916"},
+			{"id": "918"},
+			{"id": "919"}
+		],
+		"stitch": [
+			{"id": "909"},
+			{"id": "911"}
+		]
+	},
+	{
+		"id": "911",
+		"conflict_degree":2,
+		"stitch_degree":2,
+		"conflict": [
+			{"id": "918"},
+			{"id": "919"}
+		],
+		"stitch": [
+			{"id": "910"},
+			{"id": "912"}
+		]
+	},
+	{
+		"id": "912",
+		"conflict_degree":2,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "917"},
+			{"id": "918"}
+		],
+		"stitch": [
+			{"id": "911"}
+		]
+	},
+	{
+		"id": "915",
+		"conflict_degree":5,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "907"},
+			{"id": "908"},
+			{"id": "909"},
+			{"id": "917"},
+			{"id": "918"}
+		],
+		"stitch": [
+			{"id": "916"}
+		]
+	},
+	{
+		"id": "916",
+		"conflict_degree":4,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "909"},
+			{"id": "910"},
+			{"id": "917"},
+			{"id": "918"}
+		],
+		"stitch": [
+			{"id": "915"}
+		]
+	},
+	{
+		"id": "917",
+		"conflict_degree":5,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "906"},
+			{"id": "907"},
+			{"id": "912"},
+			{"id": "915"},
+			{"id": "916"}
+		],
+		"stitch": [
+			{"id": "918"}
+		]
+	},
+	{
+		"id": "918",
+		"conflict_degree":5,
+		"stitch_degree":1,
+		"conflict": [
+			{"id": "910"},
+			{"id": "911"},
+			{"id": "912"},
+			{"id": "915"},
+			{"id": "916"}
+		],
+		"stitch": [
+			{"id": "917"}
+		]
+	}
+]
