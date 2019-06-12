@@ -6,6 +6,8 @@ obj
 *.ilp
 *tags
 *.bk
+*.zip
+*.json
 lib/*
 
 obj/*
