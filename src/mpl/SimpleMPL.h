@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <stack>
+#include <string> 
 #include <limbo/algorithms/coloring/Coloring.h>
 #include "GdsiiIO.h"
 #include "boost/config.hpp"
@@ -69,6 +70,8 @@ class SimpleMPL
 		void liweidgSimplColoring(std::vector<uint32_t>::const_iterator itBgn, std::vector<uint32_t>::const_iterator itEnd, uint32_t comp_id, std::map<vertex_descriptor, std::set<uint32_t> >& m_ArtiPoint, std::vector<std::vector<vertex_descriptor> >& m_CompVertex);
 		void printVector(std::vector<uint32_t>& vector);
 		void writeJson();
+		//write Graph in .txt format for Dancing link input generation and 19 Contest Problem preparation
+		void writeGraph(graph_type const& sg,std::string const filename, double& cost);
 		void projection();
 		//for output some statistics for visualizing the results and debug easily.
 		void outStat();
@@ -116,7 +119,7 @@ class SimpleMPL
         lac::Coloring<graph_type>* create_coloring_solver(graph_type const& sg) const;
         /// given a graph, solve coloring, contain nested call for itself 
         /// \param dg is decomposition graph before simplification
-        uint32_t solve_graph_coloring(uint32_t comp_id, graph_type const& dg, 
+        double solve_graph_coloring(uint32_t comp_id, graph_type const& dg, 
                 std::vector<uint32_t>::const_iterator itBgn, uint32_t pattern_cnt, 
                 uint32_t simplify_strategy, std::vector<int8_t>& vColor, std::set<vertex_descriptor> vdd_set) ;
         /// given a component, construct graph, mapping from global index to local index, and set precolor 

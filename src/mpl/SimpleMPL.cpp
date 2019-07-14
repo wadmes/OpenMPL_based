@@ -12,6 +12,7 @@ in conflict_num() : uncomment color assertmessage
 #include "LayoutDBRect.h"
 #include "LayoutDBPolygon.h"
 #include "RecoverHiddenVertex.h"
+#include"DL_MPL.h"
 
 #include <stack>
 #include <time.h>
@@ -212,6 +213,31 @@ void SimpleMPL::writeJson(){
 	jsonFile<<"\n]";
 	jsonFile.close();
 } 
+
+void SimpleMPL::writeGraph(graph_type const& sg,std::string const filename, double& cost){
+	std::ofstream out(("./graph/"+filename+"_"+std::to_string(cost)+".txt").c_str());
+	SimpleMPL::graph_type tmp_graph = sg;
+	out << num_vertices(tmp_graph)<<"\n";
+
+	//output edges
+	boost::graph_traits<graph_type>::vertex_iterator vi1, vie1;
+	for (boost::tie(vi1, vie1) = boost::vertices(tmp_graph); vi1 != vie1; ++vi1)
+	{
+		vertex_descriptor v1 = *vi1;
+		boost::graph_traits<graph_type>::adjacency_iterator vi2, vie2,next2;
+		boost::tie(vi2, vie2) = boost::adjacent_vertices(v1, tmp_graph);
+		for (next2 = vi2; vi2 != vie2; vi2 = next2)
+		{
+			++next2; 
+			vertex_descriptor v2 = *vi2;
+			if (v1 >= v2) continue;
+			std::pair<edge_descriptor, bool> e12 = boost::edge(v1, v2, tmp_graph);
+			assert(e12.second);
+			out << int(v1) <<" "<< int(v2) <<" "<< boost::get(boost::edge_weight, tmp_graph, e12.first)<<"\n";
+		}
+	}
+	out.close();
+}
 void SimpleMPL::outStat(){
 	int TCE = 0;
 	int TSE = 0;
@@ -616,7 +642,7 @@ void SimpleMPL::dgSimplColoring(std::vector<uint32_t>::const_iterator itBgn, std
 			}
 			double obj_value1 = (*pcs)();
 			double obj_value2 = std::numeric_limits<double>::max();
-#ifndef DEBUG_NONINTEGERS
+#ifdef DEBUG_NONINTEGERS
 			if (obj_value1 >= 1 && boost::num_vertices(sub_small_simpl_sg) > 4 && (m_db->algo() == AlgorithmTypeEnum::SDP_CSDP) && (simplify_strategy & graph_simplification_type::MERGE_SUBK4) == 0) // merge K4 is not performed
 				obj_value2 = merge_K4_coloring(sub_small_simpl_sg, sub_small_comp_color);
 #endif
@@ -1745,6 +1771,7 @@ void SimpleMPL::report() const
 	}
 	mplPrint(kINFO, "Invalid color number : %d\n", count);
 	mplPrint(kINFO, "Invalid stitch number : %d\n", stitch_count/2);
+	mplPrint(kINFO, "Cost: %.2f\n", 0.1*stitch_count/2 + conflict_num());
 }
 
 void SimpleMPL::construct_graph()
@@ -2000,7 +2027,7 @@ lac::Coloring<SimpleMPL::graph_type>* SimpleMPL::create_coloring_solver(SimpleMP
             break;
         default: mplAssertMsg(0, "unknown algorithm type");
     }
-    pcs->stitch_weight(0.1);
+    pcs->stitch_weight(m_db->parms.weight_stitch);
     pcs->color_num(m_db->color_num());
     pcs->threads(1); // we use parallel at higher level 
 
@@ -2127,7 +2154,7 @@ bool SimpleMPL::fast_color_trial(std::vector<int8_t>& vSubColor,SimpleMPL::graph
 }
 /// given a graph, solve coloring 
 /// contain nested call for itself 
-uint32_t SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type const& dg, 
+double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type const& dg, 
         std::vector<uint32_t>::const_iterator itBgn, uint32_t pattern_cnt, 
         uint32_t simplify_strategy, std::vector<int8_t>& vColor, std::set<vertex_descriptor> vdd_set)
 {
@@ -2276,6 +2303,7 @@ uint32_t SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type
 		coloring_solver_type* pcs = create_coloring_solver(sg);
 
 		// set precolored vertices 
+
         boost::graph_traits<graph_type>::vertex_iterator vi, vie;
 		for (boost::tie(vi, vie) = vertices(sg); vi != vie; ++vi)
 		{
@@ -2290,13 +2318,17 @@ uint32_t SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type
         // 1st trial 
 		
 		double obj_value1 = (*pcs)(); // solve coloring 
+		if(obj_value1 != 0){
+			this->writeGraph(dg,std::to_string(comp_id),obj_value1);
+			std::cout<<"Write Component "<<comp_id<<", Sub component "<<sub_comp_id<<std::endl;
+		}
 #ifdef DEBUG
         mplPrint(kDEBUG, "comp_id = %u, %lu vertices, obj_value1 = %g\n", comp_id, num_vertices(sg), obj_value1); 
 #endif
         // 2nd trial, call solve_graph_coloring() again with MERGE_SUBK4 simplification only 
         double obj_value2 = std::numeric_limits<double>::max();
 	
-#ifndef DEBUG_NONINTEGERS
+#ifdef DEBUG_NONINTEGERS
 		std::set<vertex_descriptor> s_vdd_set;
 		for (uint32_t i = 0; i < vSimpl2Orig.size(); i++)
 		{
@@ -2310,7 +2342,9 @@ uint32_t SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type
                 && (simplify_strategy & graph_simplification_type::MERGE_SUBK4) == 0) // MERGE_SUBK4 is not performed 
             obj_value2 = solve_graph_coloring(comp_id, sg, itBgn, pattern_cnt, graph_simplification_type::MERGE_SUBK4, vSubColor, s_vdd_set); // call again 
 #endif
-
+#ifdef DEBUG
+        mplPrint(kDEBUG, "comp_id = %u, %lu vertices, obj_value1 = %g, obj_value2 = %g\n", comp_id, num_vertices(sg), obj_value1,obj_value2); 
+#endif	
         // choose smaller objective value 
         if (obj_value1 < obj_value2)
         {
@@ -2421,6 +2455,7 @@ void SimpleMPL::construct_component_graph(const std::vector<uint32_t>::const_ite
 						boost::put(boost::edge_weight, dg, e.first, -1);
 					}
 				}
+				
 			}
 		}
 	}
@@ -2459,6 +2494,7 @@ uint32_t SimpleMPL::solve_component(const std::vector<uint32_t>::const_iterator 
 	}
 
 	uint32_t component_conflict_num = conflict_num(itBgn, itEnd);
+
     // only valid under no stitch 
     // if (acc_obj_value != std::numeric_limits<uint32_t>::max())
     //    mplAssertMsg(acc_obj_value == component_conflict_num, "%u != %u", acc_obj_value, component_conflict_num);
@@ -2510,7 +2546,7 @@ uint32_t SimpleMPL::coloring_component(const std::vector<uint32_t>::const_iterat
 
 	if (m_db->simplify_level() > 2)
         simplify_strategy |= graph_simplification_type::BICONNECTED_COMPONENT;
-	uint32_t acc_obj_value = 0;
+	double acc_obj_value = 0;
     // solve graph coloring 
     acc_obj_value = solve_graph_coloring(comp_id, dg, itBgn, pattern_cnt, simplify_strategy, vColor, vdd_set);
 

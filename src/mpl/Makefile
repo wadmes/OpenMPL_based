@@ -13,7 +13,7 @@ GUROBI = 1
 # default LEMONCBC is off 
 LEMONCBC = 0
 # default CSDP is off 
-CSDP = 0
+CSDP = 1
 
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
@@ -85,8 +85,8 @@ endif
 # Csdp api (OpenBLAS and Fortran library are necessary)
 # it looks like pthead must be linked dynamically when GUROBI is also on 
 ifeq ($(CSDP), 1)
-LIBS += -L $(NEW_LIMBO_DIR)/lib $(STATIC_LINK_FLAG) -lsdp \
-	   -L $(NEW_LIMBO_DIR)/lib $(STATIC_LINK_FLAG) -lopenblas-st -lm 
+LIBS += -L $(NEW_LIMBO_DIR)/lib $(STATIC_LINK_FLAG) -L $(CSDP_DIR)/lib -lsdp \
+	   -L $(NEW_LIMBO_DIR)/lib $(STATIC_LINK_FLAG) -L $(BLAS_DIR)/lib -lopenblas -lm 
 # CSDP links to Fortran under Linux 
 ifeq ($(UNAME_S), Linux)
 LIBS += $(DYNAMIC_LINK_FLAG) -lrt -lgfortran 
@@ -138,7 +138,7 @@ $(LIB): $(OBJS)
 
 $(OBJDIR)/%.o:%.cpp
 	@$(MKDIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ $< $(INCLUDE)
+	$(CXX) $(CXXFLAGS) -std=c++11 -c -o $@ $< $(INCLUDE)
 
 # rule to generate a dep file by using the C preprocessor
 # (see man cpp for details on the -MM and -MT options)
