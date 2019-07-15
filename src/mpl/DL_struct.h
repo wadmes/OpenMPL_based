@@ -39,6 +39,7 @@ struct Vertex {
 	bool Is_Parent = true;
 	Vertex* parent = NULL;
 	int No = 0;
+	int Stitch_No = -1;
 	std::set<Vertex*> Conflicts;
 	std::set<Vertex*> Conflicts_in_LG;
 	std::vector<Vertex*> Childs;

@@ -143,6 +143,12 @@ class SimpleMPL
         /// \param filename should not contain extension 
         void write_graph(graph_type& g, std::string const& filename) const;
 
+
+		// for dancing link solver
+		// \param g is the input graph for colorings
+		// \param color_vector is the vector which stores the coloring results of each node. sizeof(color_vector) == num_vertices(g)
+		void solve_by_dancing_link(graph_type& g,std::vector<int8_t>& color_vector);
+
         layoutdb_type* m_db; ///< pointer of layout database and user-defined options 
 		/// adjacency list data structure for a graph 
 		std::vector<uint32_t>					m_vVertexOrder;		///< vertex id, vertices in the same component are abutting,

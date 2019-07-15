@@ -260,7 +260,7 @@ void recover_intermediate_process(DancingLink & dl, int this_col, std::set<int> 
 	}
 }
 
-bool MPLD_X_Solver(DancingLink & dl, std::vector<int> & result_vec, std::set<std::pair<int, int> >  & conflict_set, 
+bool MPLD_X_Solver(DancingLink & dl, std::vector<int8_t>& color_vector,std::vector<int> & result_vec, std::set<std::pair<int, int> >  & conflict_set, 
 			int vertex_numbers, int mask_numbers,
 			std::vector<int> & Delete_the_Row_in_which_Col,
 			std::vector<std::list<int> >  & Order_of_Row_Deleted_in_Col, int depth, std::vector<int> & MPLD_search_vector, std::string result_file)
@@ -268,7 +268,7 @@ bool MPLD_X_Solver(DancingLink & dl, std::vector<int> & result_vec, std::set<std
 	// If there is no columns left or all the verteices are covered, then the algorithm terminates.
 	if (dl.DL_Header.Right == &dl.DL_Header || Vertices_All_Covered(dl, vertex_numbers))
 	{
-		Decode(vertex_numbers, mask_numbers, result_vec, conflict_set, result_file);
+		Decode_OpenMPL(vertex_numbers, mask_numbers, color_vector,result_vec, conflict_set, result_file);
 		return true;
 	}
 	/* 
@@ -289,7 +289,7 @@ bool MPLD_X_Solver(DancingLink & dl, std::vector<int> & result_vec, std::set<std
 		int last_row = Order_of_Row_Deleted_in_Col[this_col].back();
 		int conflict_col = Delete_the_Row_in_which_Col[last_row];
 		conflict_set.insert(std::make_pair(conflict_col, this_col));
-		if (MPLD_X_Solver(dl, result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth + 1, MPLD_search_vector, result_file))
+		if (MPLD_X_Solver(dl, color_vector,result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth + 1, MPLD_search_vector, result_file))
 			return true;
 	}
 	for (Cell *j = col->Down; j != col; j = j->Down)
@@ -301,7 +301,7 @@ bool MPLD_X_Solver(DancingLink & dl, std::vector<int> & result_vec, std::set<std
 		store_intermediate_process(dl, this_col, row_set, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col);
 
 		Remove_Rows_Cols(dl, row_set, col_set);
-		if (MPLD_X_Solver(dl, result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth + 1, MPLD_search_vector, result_file))
+		if (MPLD_X_Solver(dl, color_vector,result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth + 1, MPLD_search_vector, result_file))
 			return true;
 
 		result_vec.pop_back();
@@ -341,6 +341,27 @@ void Decode(int vertex_numbers, int mask_numbers, std::vector<int> result_vec, s
 	}
 	
 	fileout.close();
+} 
+
+void Decode_OpenMPL(int vertex_numbers, int mask_numbers, std::vector<int8_t>& color_vector,std::vector<int> result_vec, std::set<std::pair<int, int> > conflict_set, std::string filename)
+{
+	for (auto i = result_vec.begin(); i != result_vec.end(); i++)
+	{
+		// std::cout << *i << std::endl;
+		int No = ((*i) - 1) / mask_numbers + 1;
+		int mask = (*i + 2) % mask_numbers + 1;
+		color_vector[No-1] = mask; 
+	}
+
+	if (!conflict_set.empty())
+	{
+		std::cout << "Conflicts: " << std::endl;
+		std::cout << "No\t Source\t Target" << std::endl;
+		int count = 1;
+		for (auto i = conflict_set.begin(); i != conflict_set.end(); i++)
+			std::cout << count++ << "\t " << i->first << "\t " << i->second << std::endl;
+		fileout << "=============================================" << std::endl;
+	}
 } 
 
 void MPLD_Solver(std::string Graph_Filename, std::string Exact_Cover_Filename, bool whether_BFS, int mask_numbers, std::string result_file)

@@ -87,6 +87,8 @@ bool CmdParser::operator()(int argc, char** argv)
         }
         else if (limbo::iequals(algo_str, "BACKTRACK"))
             parms.algo = AlgorithmTypeEnum::BACKTRACK;
+        else if (limbo::iequals(algo_str, "DL"))
+            parms.algo = AlgorithmTypeEnum::DANCING_LINK;
         else mplPrint(kWARN, "Unknown algorithm type %s, set to default algorithm\n", algo_str.c_str());
 
         // post processing shape_str

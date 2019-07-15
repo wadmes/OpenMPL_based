@@ -126,7 +126,7 @@ void recover_intermediate_process(DancingLink & dl, int this_col, std::set<int> 
  *											the children's row No. in the order of removement.
  * @param	result_file:	the file storing the final result
  */
-bool MPLD_X_Solver(DancingLink & dl, std::vector<int> & result_vec, std::set<std::pair<int, int> > & conflict_set,
+bool MPLD_X_Solver(DancingLink & dl,std::vector<int8_t>& color_vector, std::vector<int> & result_vec, std::set<std::pair<int, int> > & conflict_set,
 	int vertex_numbers, int mask_numbers,
 	std::vector<int> & Delete_the_Row_in_which_Col,
 	std::vector<std::list<int> > & Order_of_Row_Deleted_in_Col, 
@@ -142,6 +142,7 @@ bool MPLD_X_Solver(DancingLink & dl, std::vector<int> & result_vec, std::set<std
  */
 void Decode(int vertex_numbers, int mask_numbers, std::vector<int> result_vec, std::set<std::pair<int, int> >  conflict_set, std::string filename);
 
+void Decode_OpenMPL(int vertex_numbers, int mask_numbers, std::vector<int8_t>& color_vector,std::vector<int> result_vec, std::set<std::pair<int, int> > conflict_set, std::string filename);
 /*
  * @brief:	MPLD_Solver
  * 

@@ -2255,7 +2255,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 	{
 		std::cout << std::endl;
 		graph_type sg;
-		std::vector<int8_t>& vSubColor = mSubColor[sub_comp_id];
+		std::vector<int8_t>& vSubColor =  [sub_comp_id];
 		std::vector<vertex_descriptor>& vSimpl2Orig = mSimpl2Orig[sub_comp_id];
 
 		gs.simplified_graph_component(sub_comp_id, sg, vSimpl2Orig);
@@ -2297,7 +2297,11 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 		#endif
 		***/
 		
-			
+		//if algorithm is Dancing Link, call it directly
+		if(m_db->algo() == AlgorithmTypeEnum::DANCING_LINK){
+			solve_by_dancing_link(sg,vSubColor);
+			continue;
+		}
 		// solve coloring 
 		typedef lac::Coloring<graph_type> coloring_solver_type;
 		coloring_solver_type* pcs = create_coloring_solver(sg);
@@ -2397,6 +2401,151 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
     return acc_obj_value;
 }
 
+
+void solve_by_dancing_link(graph_type& g,std::vector<int8_t>& color_vector){
+	//Due to graph does not contain a parent&child node system
+	// we simply redesign a node struct to achieve this kind of system
+	assert(num_vertices(g) == color_vector.size());
+	DancingLink dl; 
+	std::vector<Vertex*> node_list;
+	node_list.resize(num_vertices(g));
+	int vertex_numbers = 0;
+	int edge_numbers = 0;
+	for (boost::tie(vi1, vie1) = boost::vertices(g); vi1 != vie1; ++vi1)
+	{	
+		vertex_descriptor v1 = *vi1;
+		boost::graph_traits<graph_type>::adjacency_iterator vi2, vie2,next2;
+		boost::tie(vi2, vie2) = boost::adjacent_vertices(v1, g);
+		for (next2 = vi2; vi2 != vie2; vi2 = next2)
+		{
+			++next2; 
+			vertex_descriptor v2 = *vi2;
+			if (v1 >= v2) continue;
+			std::pair<edge_descriptor, bool> e12 = boost::edge(v1, v2, g);
+			assert(e12.second);
+			
+			//if node source and node target is not created. New one/
+			if(!node_list[v1]){
+				Vertex* source_vertex = new Vertex;
+				assert(source_vertex->Conflicts.empty());
+				node_list[v1] = source_vertex;
+				source_vertex->Stitch_No = v1;
+				vertex_numbers ++;
+			}
+			if(!node_list[v2]){
+				Vertex* target_vertex = new Vertex;
+				source_vertex->Stitch_No = v2;
+				node_list[v2] = target_vertex;
+				vertex_numbers ++;
+			}
+
+			//if two nodes are stitch relationships and both of them are parent
+			if(boost::get(boost::edge_weight, g, e12.first) < 0){
+				Vertex* parent_vertex = new Vertex;
+				assert(parent_vertex->Childs.empty());
+				parent_vertex->parentOf(node_list[v1]);
+				parent_vertex->parentOf(node_list[v2]);
+				vertex_numbers -= 1;
+				continue;
+			}
+			node_list[v1]->Conflicts.insert(node_list[v2]);
+		}
+	}
+	//need to store node list, which does not contain child node
+	std::set<Vertex*> node_wo_stitch_list;
+	int index = 1;
+	for(std::vector<Vertex*>::iterator it = node_list.begin(); it != node_list.end(); ++it) {
+		//if the node in parent node, means it has no stitch relations
+		if((*it)->Is_Parent){
+			node_wo_stitch_list.insert((*it));
+			(*it)->updateConflicts();
+			(*it)->No = index;
+			index ++;
+		}
+		//else, add its parent node if it has not been added into node_wo_stitch_list
+		else{
+			assert((*it)->parent->Is_Parent);
+			if(node_wo_stitch_list.find((*it)->parent) == node_wo_stitch_list.end()){
+				node_wo_stitch_list.insert((*it)->parent);
+				(*it)->parent->updateConflicts();
+				(*it)->parent->No = index;
+				index ++;
+			}
+
+		}
+	}
+	assert(node_wo_stitch_list.size() == vertex_numbers);
+
+
+	std::vector<std::list<Edge_Simple> >   edge_list;
+	edge_list.resize(vertex_numbers + 1);
+	for(std::set<Vertex*>::iterator it = node_wo_stitch_list.begin(); it != node_wo_stitch_list.end(); ++it) {
+		assert((*it)->No != 0);
+		for(std::set<Vertex*>::iterator itconflict = (*it)->Conflicts_in_LG.begin(); itconflict != (*it)->Conflicts_in_LG.end(); ++itconflict) {
+			if((*itconflict)->Is_Parent){
+				assert((*itconflict)->No != 0);
+				edge_numbers++;
+				edge_list[(*it)->No].push_back(Edge_Simple{ (*itconflict)->No, edge_numbers });
+				edge_list[(*itconflict)->No].push_back(Edge_Simple{ (*it)->No, edge_numbers });	
+			}
+			else{
+				assert((*itconflict)->parent->Is_Parent);
+				//avoid repeat (conflicts of stitch realation nodes may represent same conflict)
+				edge_numbers++;	
+				edge_list[(*it)->No].push_back(Edge_Simple{ (*itconflict)->parent->No, edge_numbers });
+				edge_list[(*itconflict)->parent->No].push_back(Edge_Simple{ (*it)->No, edge_numbers });
+			}
+		}
+		}
+	std::cout<<"EDGE list generated with size: "<<edge_numbers<<std::endl;
+
+	
+	
+	int row_numbers = vertex_numbers * m_db->color_num() + 1;
+	int col_numbers = edge_numbers * m_db->color_num() + vertex_numbers;
+	DL_Init(dl, row_numbers, col_numbers);
+
+	// Insert DL cells
+	for (int it = 1; it < edge_list.size(); ++it)
+	{
+		for (int i = 1; i <= m_db->color_num(); ++i)
+		{
+			Cell_Insert(dl,(it - 1)*m_db->color_num() + i,it);
+			for (auto j = edge_list[it].begin(); j != edge_list[it].end(); ++j)
+			{
+				Cell_Insert(dl,(it - 1)*m_db->color_num() + i,vertex_numbers + (j->No - 1)*m_db->color_num() + i);
+			}
+		}
+	}
+	for (int i = 0; i < edge_numbers; ++i)
+	{
+		for (int j = 1; j <= m_db->color_num(); ++j)
+			Cell_Insert(dl,vertex_numbers * m_db->color_num() + 1,vertex_numbers + i * m_db->color_num() + j);
+	}
+
+	// construct verctors for calling API in DL_MPL.cpp
+	std::vector<int> result_vec;
+	std::set<std::pair<int, int> >  conflict_set;
+	std::vector<int> Delete_the_Row_in_which_Col;
+	std::vector<std::list<int> >  Order_of_Row_Deleted_in_Col;
+	std::vector<int> MPLD_search_vector;
+	MPLD_search_vector = Simple_Order(edge_list.size());
+	int depth = 1;
+	std::vector<int8_t> color_results_wo_stitch (vertex_numbers);
+	color_results_wo_stitch.assign(vertex_numbers,-1);
+	MPLD_X_Solver(dl,color_results_wo_stitch, result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth, MPLD_search_vector, result_file);
+	for(std::vector<Vertex*>::iterator it = node_list.begin(); it != node_list.end(); ++it) {
+		if((*it)->No == 0){
+			assert((*it)->Is_Parent == false);
+			assert((*it)->parent->Stitch_No == -1);
+			assert(color_results_wo_stitch[(*it)->parent->No -1]!= -1)
+			color_vector[(*it)->Stitch_No] = color_results_wo_stitch[(*it)->parent->No -1];
+		}
+		else{
+			color_vector[(*it)->Stitch_No] = color_results_wo_stitch[(*it)->No -1];
+		}
+	}
+}
 void SimpleMPL::construct_component_graph(const std::vector<uint32_t>::const_iterator itBgn, uint32_t const pattern_cnt, 
         SimpleMPL::graph_type& dg, std::map<uint32_t, uint32_t>& mGlobal2Local, std::vector<int8_t>& vColor,std::set<vertex_descriptor>& vdd_set, bool flag) const
 {
