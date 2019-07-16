@@ -33,5 +33,5 @@
 	-uncolor_layer 1 \
 	-uncolor_layer 101 \
     -color_num 3 \
-    -algo BACKTRACK \
+    -algo DL \
     -thread_num 8 \

@@ -177,7 +177,7 @@
 	},
 	{
 		"id": 691,
-		"color": 1,
+		"color": 2,
 		"conflict_degree":3,
 		"stitch_degree":1,
 		"conflict": [
@@ -191,7 +191,7 @@
 	},
 	{
 		"id": 692,
-		"color": 1,
+		"color": 2,
 		"conflict_degree":3,
 		"stitch_degree":2,
 		"conflict": [
@@ -206,7 +206,7 @@
 	},
 	{
 		"id": 693,
-		"color": 1,
+		"color": 2,
 		"conflict_degree":4,
 		"stitch_degree":2,
 		"conflict": [
@@ -222,7 +222,7 @@
 	},
 	{
 		"id": 694,
-		"color": 1,
+		"color": 2,
 		"conflict_degree":5,
 		"stitch_degree":1,
 		"conflict": [
@@ -238,7 +238,7 @@
 	},
 	{
 		"id": 695,
-		"color": 2,
+		"color": 0,
 		"conflict_degree":3,
 		"stitch_degree":1,
 		"conflict": [
@@ -252,7 +252,7 @@
 	},
 	{
 		"id": 696,
-		"color": 2,
+		"color": 0,
 		"conflict_degree":3,
 		"stitch_degree":1,
 		"conflict": [
@@ -266,7 +266,7 @@
 	},
 	{
 		"id": 697,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":6,
 		"stitch_degree":1,
 		"conflict": [
@@ -283,7 +283,7 @@
 	},
 	{
 		"id": 698,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":4,
 		"stitch_degree":4,
 		"conflict": [
@@ -301,7 +301,7 @@
 	},
 	{
 		"id": 699,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":5,
 		"stitch_degree":2,
 		"conflict": [
@@ -318,7 +318,7 @@
 	},
 	{
 		"id": 700,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":1,
 		"stitch_degree":1,
 		"conflict": [
@@ -330,7 +330,7 @@
 	},
 	{
 		"id": 701,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":2,
 		"stitch_degree":1,
 		"conflict": [
@@ -343,7 +343,7 @@
 	},
 	{
 		"id": 702,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":2,
 		"stitch_degree":1,
 		"conflict": [
@@ -356,7 +356,7 @@
 	},
 	{
 		"id": 714,
-		"color": 2,
+		"color": 0,
 		"conflict_degree":5,
 		"stitch_degree":1,
 		"conflict": [
@@ -372,7 +372,7 @@
 	},
 	{
 		"id": 715,
-		"color": 2,
+		"color": 0,
 		"conflict_degree":4,
 		"stitch_degree":1,
 		"conflict": [
@@ -387,7 +387,7 @@
 	},
 	{
 		"id": 716,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":6,
 		"stitch_degree":1,
 		"conflict": [
@@ -404,7 +404,7 @@
 	},
 	{
 		"id": 717,
-		"color": 0,
+		"color": 1,
 		"conflict_degree":4,
 		"stitch_degree":1,
 		"conflict": [

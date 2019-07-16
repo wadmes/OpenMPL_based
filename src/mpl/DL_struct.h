@@ -50,11 +50,15 @@ struct Vertex {
 		2. parent and fake node (represent one feature in layout)
 		3. child and real node
 		 */
+		
+		std::cout<<this->Stitch_No<<" "<<child->Stitch_No<<std::endl;
 		// case 3
 		if(child->Is_Parent == false){
 			std::cout<<"case 3"<<std::endl;
+			assert(child->Childs.empty());
 			assert(!child->parent->Childs.empty());
 			this->parentOf(child->parent);
+			child->parent = this;
 		}
 		else{
 			//insert conflicts into this conflicts if no repeatation

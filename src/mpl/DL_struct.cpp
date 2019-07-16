@@ -105,6 +105,8 @@ void Cell_Insert(DancingLink & dl, int row, int col) {
 	Cell *c = new Cell;
 	c->Row = row;
 	c->Col = col;
+	assert(row>0);
+	assert(col>0);
 	// std::cout << "Row : " << row << " Col : " << col << std::endl;
 	// c.Col_Header = &dl.Col_Header_Table[col];
 	// std::cout << "&dl\t" << &dl << std::endl;

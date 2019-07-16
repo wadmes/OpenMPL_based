@@ -359,8 +359,9 @@ void Decode_OpenMPL(int vertex_numbers, int mask_numbers, std::vector<int8_t>& c
 		std::cout << "No\t Source\t Target" << std::endl;
 		int count = 1;
 		for (auto i = conflict_set.begin(); i != conflict_set.end(); i++)
-			std::cout << count++ << "\t " << i->first << "\t " << i->second << std::endl;
-		fileout << "=============================================" << std::endl;
+			{color_vector[i->second-1] = color_vector[i->first-1];
+			std::cout << count++ << "\t " << i->first << "\t " << i->second << std::endl;}
+		std::cout << "=============================================" << std::endl;
 	}
 } 
 
@@ -370,6 +371,7 @@ void MPLD_Solver(std::string Graph_Filename, std::string Exact_Cover_Filename, b
 	int edge_numbers;
 	int row_numbers;
 	int col_numbers;
+	std::vector<int8_t> color_vec;
 	std::vector<int> result_vec;
 	std::set<std::pair<int, int> >  conflict_set;
 	std::vector<int> Delete_the_Row_in_which_Col;
@@ -382,6 +384,6 @@ void MPLD_Solver(std::string Graph_Filename, std::string Exact_Cover_Filename, b
 	Delete_the_Row_in_which_Col.resize(row_numbers + 1);
 	DL_Load(dl, Exact_Cover_Filename);
 	int depth = 1;
-	MPLD_X_Solver(dl, result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth, MPLD_search_vector, result_file);
+	MPLD_X_Solver(dl, color_vec,result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth, MPLD_search_vector, result_file);
 }
 
