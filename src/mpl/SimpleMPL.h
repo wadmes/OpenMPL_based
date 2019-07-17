@@ -8,8 +8,8 @@
 #ifndef SIMPLEMPL_SIMPLEMPL_H
 #define SIMPLEMPL_SIMPLEMPL_H
 #define LIWEI_BEFORE 0
-#define LIWEI_DEBUG 1
-#define DEBUG_LIWEI
+#define LIWEI_DEBUG 0
+//#define DEBUG_LIWEI
 #include <iostream>
 #include <fstream>
 #include <stack>

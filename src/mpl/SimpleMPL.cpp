@@ -241,13 +241,13 @@ void SimpleMPL::writeGraph(graph_type const& sg,std::string const filename, doub
 void SimpleMPL::outStat(){
 	int TCE = 0;
 	int TSE = 0;
-	#ifdef DEBUG_LIWEI
+	#ifdef DEBUG_LIWEI_DONE
 		std::cout<<"Now node size is "<<m_mAdjVertex.size()<<", dg size is "<<in_DG.size()<<std::endl;
 	#endif
     for (uint32_t i = 0; i != m_mAdjVertex.size(); i++)
     {
 		if(in_DG[i] == false) continue;
-		#ifdef DEBUG_LIWEI
+		#ifdef DEBUG_LIWEI_DONE
 			std::cout<<"LIWEI: for DG node "<<i<<", there are "<<m_mAdjVertex[i].size()<<std::endl;
 		#endif
 		for(int32_t j = 0; j != m_mAdjVertex[i].size(); j++)
@@ -317,16 +317,16 @@ void SimpleMPL::solve()
 		this->setVddGnd(); //perhapes we should also consider pshape->getPointNum()==4
 		
 		clock_t begin = clock();
-		#ifdef DEBUG_LIWEI
+		#ifdef DEBUG_LIWEI_DONE
 			std::cout<<"LIWEI: lg simplification starts"<<std::endl;
 		#endif
 		this->lgSimplification();
-		#ifdef DEBUG_LIWEI
+		#ifdef DEBUG_LIWEI_DONE
 			std::cout<<"LIWEI: lg simplification finishes"<<std::endl;
 		#endif
 		//GdsWriter writer;
 		//writer.write_Simplification(m_db->output_gds() + "_lgSimplification.gds", *m_db, m_vCompId, m_mAdjVertex, in_DG, isVDDGND, true);
-		#ifdef DEBUG_LIWEI
+		#ifdef DEBUG_LIWEI_DONE
 			std::cout<<"LIWEI: projection starts"<<std::endl;
 		#endif
 		this->projection();		///< vBookmark has already been updated in projection()
@@ -699,7 +699,7 @@ void SimpleMPL::liweidgSimplColoring(std::vector<uint32_t>::const_iterator itBgn
 	std::vector<std::vector<int8_t> > big_comp_color(gs.num_component());
 	std::vector<std::vector<vertex_descriptor> > mSmall2Big (gs.num_component());
 	std::stack<vertex_descriptor> vHiddenVertices = gs.hidden_vertices();
-	#ifdef DEBUG_LIWEI
+	#ifdef DEBUG_LIWEI_DONE
 		if(pattern_cnt > vHiddenVertices.size())
 			std::cout << "Debug| dgSimplification comp " << comp_id << ", with left vertex number "<< pattern_cnt-vHiddenVertices.size()<<", subcomponent number "<<gs.num_component()<<std::endl;
 	#endif
@@ -719,7 +719,7 @@ void SimpleMPL::liweidgSimplColoring(std::vector<uint32_t>::const_iterator itBgn
 		uint32_t temp = 0;
 		std::set<vertex_descriptor> small_vdd_set;
 		std::vector<int8_t> small_vColor(num_vertices(small_g), -1);
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
 		std::cout << "Debug| dgSimplification sub_comp " << small_comp_id << " with vertices "<<num_vertices(small_g)<< std::endl;
 #endif
 	}
@@ -1033,7 +1033,7 @@ void SimpleMPL::projection()
 #endif
 	m_db->refresh(new_rect_vec, new_Rect2ParentPoly);
 
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
 	std::cout<<"LIWEI: refresh done"<<std::endl;
 #endif
 	updateConflictRelation(); 
@@ -1438,7 +1438,7 @@ void SimpleMPL::reconstruct_polygon(uint32_t& polygon_id, std::vector<uint32_t>&
 		}
 	}
 
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
 	for (uint32_t i = 0; i< rect_list_size; i++){
 		for (uint32_t j = i + 1; j < rect_list_size; j++)
 		{
@@ -1525,7 +1525,7 @@ void SimpleMPL::splitRectangle(rectangle_type & pRect, std::vector<rectangle_poi
 		
 		boost::polygon::intersect(temp, pRect, true);
 		
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
 		vInterSect.push_back(temp);
 #else
 		vInterSect.push_back(temp);
@@ -1842,7 +1842,7 @@ uint32_t SimpleMPL::construct_graph_from_distance(uint32_t vertex_num)
         // parallel with omp reduction here 
         edge_num += vAdjVertex.size();
     }
-	#ifdef DEBUG_LIWEI
+	#ifdef DEBUG_LIWEI_DONE
 		std::cout<<"number pf Edges with length zero are "<<zero_len_edge_num/2<<", m_db->coloring_distance is"<<m_db->coloring_distance<<", distance_value_count is "<< std::endl;
 		for (std::vector<uint32_t>::iterator i = distance_value_count.begin(); i != distance_value_count.end(); ++i)
         	std::cout << *i << ' ';
@@ -2177,7 +2177,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 	uint32_t hard_code_vertex2 = -1;
 	
 
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
 	for (uint32_t i = 0; i != pattern_cnt; ++i)
 	{
 		uint32_t const& v = *(itBgn+i);
@@ -2216,7 +2216,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 	
 	// collect simplified information 
 	std::stack<vertex_descriptor> vHiddenVertices = gs.hidden_vertices();
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
     std::stack<vertex_descriptor> vHiddenVertices_debug = gs.hidden_vertices();
 	while(!vHiddenVertices_debug.empty()){
 		if(vHiddenVertices_debug.top() == hard_code_vertex){
@@ -2246,7 +2246,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 	std::vector<vertex_descriptor> all_articulations;
 
 	gs.get_articulations(all_articulations);
-#ifdef DEBUG_LIWEI
+#ifdef DEBUG_LIWEI_DONE
 	if(all_articulations.size() > 0)
 		std::cout<<"LIWEI: articulations size is "<<all_articulations.size()<<", component number is "<<gs.num_component()<<std::endl;
 #endif
@@ -2272,7 +2272,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 		/***
 		if(fast_color_trial(vSubColor,sg))
 		{
-			#ifdef DEBUG_LIWEI
+			#ifdef DEBUG_LIWEI_DONE
 
 				for(int i = 0; i< vSimpl2Orig.size();i++){
 					if(vSimpl2Orig[i] == hard_code_vertex)
@@ -2292,7 +2292,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 			continue;
 		}
 		
-		#ifdef DEBUG_LIWEI
+		#ifdef DEBUG_LIWEI_DONE
 			std::cout<<"LIWEI: fct but failed"<<std::endl;
 		#endif
 		***/
@@ -2366,7 +2366,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
         }
         else // no need to update vSubColor, as it is already updated by sub call 
             acc_obj_value += obj_value2;
-		#ifdef DEBUG_LIWEI
+		#ifdef DEBUG_LIWEI_DONE
 			if(sub_comp_id == 0){
 				std::cout<<"vSubColor.size()"<<vSubColor.size()<<std::endl;
 				for(int j = 0; j<vSubColor.size();j++){
@@ -2382,7 +2382,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 #ifdef _DGOUT
 	return 1;
 #endif
-	#ifdef DEBUG_LIWEI
+	#ifdef DEBUG_LIWEI_DONE
 	if(find_debug)
 		std::cout<<"Color before recover is "<<(int)vColor[hard_code_vertex]<<" "<<(int)vColor[hard_code_vertex2]<<std::endl;
 	#endif
@@ -2390,7 +2390,7 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 	// HIDE_SMALL_DEGREE needs to be recovered manually for density balancing 
 	gs.recover(vColor, mSubColor, mSimpl2Orig); 
 
-	#ifdef DEBUG_LIWEI
+	#ifdef DEBUG_LIWEI_DONE
 	if(find_debug)
 		std::cout<<"Color is "<<(int)vColor[hard_code_vertex]<<" "<<(int)vColor[hard_code_vertex2]<<std::endl;
 	#endif
@@ -2442,7 +2442,7 @@ void SimpleMPL::solve_by_dancing_link(SimpleMPL::graph_type& g,std::vector<int8_
 
 			//if two nodes are stitch relationships and both of them are parent
 			if(boost::get(boost::edge_weight, g, e12.first) < 0){
-				std::cout<<"Stitch:"<<v1<<" "<<v2<<std::endl;
+				//std::cout<<"Stitch:"<<v1<<" "<<v2<<std::endl;
 				if(node_list[v1]->parent != NULL && node_list[v1]->parent== node_list[v2]->parent) continue;
 				Vertex* parent_vertex = new Vertex;
 				assert(parent_vertex->Childs.empty());

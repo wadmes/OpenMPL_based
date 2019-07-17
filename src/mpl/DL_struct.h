@@ -51,10 +51,10 @@ struct Vertex {
 		3. child and real node
 		 */
 		
-		std::cout<<this->Stitch_No<<" "<<child->Stitch_No<<std::endl;
+		//std::cout<<this->Stitch_No<<" "<<child->Stitch_No<<std::endl;
 		// case 3
 		if(child->Is_Parent == false){
-			std::cout<<"case 3"<<std::endl;
+			//std::cout<<"case 3"<<std::endl;
 			assert(child->Childs.empty());
 			assert(!child->parent->Childs.empty());
 			this->parentOf(child->parent);
@@ -64,7 +64,7 @@ struct Vertex {
 			//insert conflicts into this conflicts if no repeatation
 			//case 2
 			if(!child->Childs.empty()){
-				std::cout<<"case 2"<<std::endl;
+				//std::cout<<"case 2"<<std::endl;
 				this->Childs.insert(this->Childs.end(),child->Childs.begin(),child->Childs.end());
 				for(std::vector<Vertex*>::iterator it = child->Childs.begin(); it != child->Childs.end(); ++it) {
 					assert((*it)->Is_Parent == false);
@@ -75,7 +75,7 @@ struct Vertex {
 			}
 			//case 1
 			else{
-				std::cout<<"case 1"<<std::endl;
+				//std::cout<<"case 1"<<std::endl;
 				child->Is_Parent = false;
 				child->parent = this;
 				this->Childs.push_back(child);
