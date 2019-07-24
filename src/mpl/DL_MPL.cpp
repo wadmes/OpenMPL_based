@@ -279,18 +279,19 @@ bool MPLD_X_Solver(DancingLink & dl, std::vector<int8_t>& color_vector,std::vect
 	else
 	{
 	*/
-	// std::cout << "depth : " << depth << std::endl;
+	std::cout << "depth : " << depth << std::endl;
 	int this_col = Next_Column(MPLD_search_vector, depth);
-	// std::cout << "this_col : " << this_col << std::endl;
+	std::cout << "this_col : " << this_col << std::endl;
 	Cell *col = &dl.Col_Header_Table[this_col];
 	LR_remove(*col);
 	if (col->Children_Number == 0)
 	{
 		int last_row = Order_of_Row_Deleted_in_Col[this_col].back();
 		int conflict_col = Delete_the_Row_in_which_Col[last_row];
+		std::cout<<"last row is "<<last_row<<std::endl;
 		conflict_set.insert(std::make_pair(conflict_col, this_col));
-		if (MPLD_X_Solver(dl, color_vector,result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth + 1, MPLD_search_vector, result_file))
-			return true;
+		// if (MPLD_X_Solver(dl, color_vector,result_vec, conflict_set, vertex_numbers, mask_numbers, Delete_the_Row_in_which_Col, Order_of_Row_Deleted_in_Col, depth + 1, MPLD_search_vector, result_file))
+		// 	return true;
 	}
 	for (Cell *j = col->Down; j != col; j = j->Down)
 	{
@@ -347,22 +348,23 @@ void Decode_OpenMPL(int vertex_numbers, int mask_numbers, std::vector<int8_t>& c
 {
 	for (auto i = result_vec.begin(); i != result_vec.end(); i++)
 	{
-		// std::cout << *i << std::endl;
+		std::cout << *i << std::endl;
+		if((*i) < vertex_numbers * mask_numbers + 1){
 		int No = ((*i) - 1) / mask_numbers + 1;
-		int mask = (*i + 2) % mask_numbers + 1;
-		color_vector[No-1] = mask; 
+		int mask = (*i + 2) % mask_numbers;
+		color_vector[No-1] = mask; }
 	}
 
-	if (!conflict_set.empty())
-	{
-		std::cout << "Conflicts: " << std::endl;
-		std::cout << "No\t Source\t Target" << std::endl;
-		int count = 1;
-		for (auto i = conflict_set.begin(); i != conflict_set.end(); i++)
-			{color_vector[i->second-1] = color_vector[i->first-1];
-			std::cout << count++ << "\t " << i->first << "\t " << i->second << std::endl;}
-		std::cout << "=============================================" << std::endl;
-	}
+	// if (!conflict_set.empty())
+	// {
+	// 	std::cout << "Conflicts: " << std::endl;
+	// 	std::cout << "No\t Source\t Target" << std::endl;
+	// 	int count = 1;
+	// 	for (auto i = conflict_set.begin(); i != conflict_set.end(); i++)
+	// 		{color_vector[i->second-1] = color_vector[i->first-1];
+	// 		std::cout << count++ << "\t " << i->first << "\t " << i->second << std::endl;}
+	// 	std::cout << "=============================================" << std::endl;
+	// }
 } 
 
 void MPLD_Solver(std::string Graph_Filename, std::string Exact_Cover_Filename, bool whether_BFS, int mask_numbers, std::string result_file)

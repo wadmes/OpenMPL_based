@@ -102,6 +102,10 @@ void print(DancingLink & dl)
 */
 
 void Cell_Insert(DancingLink & dl, int row, int col) {
+	Cell *r = &dl.Row_Header_Table[row];
+	for (Cell *i = r->Right; i != r; i = i->Right) {
+		if(i->Col == col) return;
+	}
 	Cell *c = new Cell;
 	c->Row = row;
 	c->Col = col;

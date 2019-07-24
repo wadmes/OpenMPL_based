@@ -96,6 +96,22 @@ struct Vertex {
 			else{
 				this->Conflicts_in_LG.insert((*it)->parent);
 			}
+			// if(this->Is_Parent){
+			// 	(*it)->Conflicts_in_LG.insert(this);
+			// }
+			// else{
+			// 	(*it)->Conflicts_in_LG.insert(this->parent);
+			// }
+		}
+	}
+	void updateDuplicateLGConflicts(){
+		for(std::set<Vertex*>::iterator it = this->Conflicts.begin(); it != this->Conflicts.end(); ++it) {
+			if(this->Is_Parent){
+				(*it)->Conflicts_in_LG.insert(this);
+			}
+			else{
+				(*it)->Conflicts_in_LG.insert(this->parent);
+			}
 		}
 	}
 };

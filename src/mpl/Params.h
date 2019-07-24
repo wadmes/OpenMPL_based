@@ -57,7 +57,7 @@ inline ControlParameter::ControlParameter()
     thread_num               = 1;
     weight_stitch            = 0.1;
     verbose                  = false;
-	use_stitch				 = true;
+	use_stitch				 = false;
 	gen_stitch				 = false;
     dbg_comp_id              = std::numeric_limits<uint32_t>::max();
     input_gds                = "";

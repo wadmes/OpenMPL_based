@@ -128,6 +128,7 @@ class SimpleMPL
 
 		/// report conflict number for a component 
 		uint32_t conflict_num(const std::vector<uint32_t>::const_iterator itBgn, const std::vector<uint32_t>::const_iterator itEnd) const;
+
 		/// report conflict number for the whole layout 
 		/// collect conflict patterns to m_vConflict
 		uint32_t conflict_num() const;
@@ -148,7 +149,12 @@ class SimpleMPL
 		// \param g is the input graph for colorings
 		// \param color_vector is the vector which stores the coloring results of each node. sizeof(color_vector) == num_vertices(g)
 		void solve_by_dancing_link(graph_type& g,std::vector<int8_t>& color_vector);
-
+		
+		//for dancing link solver of stitch graph
+		void solve_by_dancing_link_with_stitch(graph_type& g,std::vector<int8_t>& color_vector);
+	
+		//calculate cost, used in dancing link
+		double calc_cost(SimpleMPL::graph_type& g,std::vector<int8_t> const& vColor);
         layoutdb_type* m_db; ///< pointer of layout database and user-defined options 
 		/// adjacency list data structure for a graph 
 		std::vector<uint32_t>					m_vVertexOrder;		///< vertex id, vertices in the same component are abutting,
