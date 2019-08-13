@@ -501,11 +501,41 @@ void SimpleMPL::solve()
         this->solve_component(itBgn, itEnd, comp_id);
 	}
 #if RECORD == 1
-	std::ofstream myfile;
-	myfile.open ("record.txt", std::ofstream::app);
-	myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
-	myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
-	myfile.close();
+	if(m_db->use_stitch()){
+		std::ofstream myfile,color_time,total_time;
+		myfile.open ("record.txt", std::ofstream::app);
+		color_time.open("color_w_stitch.txt",std::ofstream::app);
+		total_time.open("total_w_stitch.txt",std::ofstream::app);
+		myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
+		myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
+		if(m_db->algo() == AlgorithmTypeEnum::ILP_GURBOI){
+			color_time<<"\n"<<m_db->input_gds();
+			total_time<<"\n"<<m_db->input_gds();
+		}
+		color_time<<t.format(2, "% %t  %  %w");
+		total_time<<total_timer.format(2, "% %t  %  %w");
+		myfile.close();
+		color_time.close();
+		total_time.close();
+	}
+	else{
+		std::ofstream myfile,color_time,total_time;
+		myfile.open ("record.txt", std::ofstream::app);
+		color_time.open("color_wo_stitch.txt",std::ofstream::app);
+		total_time.open("total_wo_stitch.txt",std::ofstream::app);
+		myfile << t.format(2, "color time %ts(%p%), %ws real")<<"\n";
+		myfile << total_timer.format(2, "total time %ts(%p%), %ws real")<<"\n";
+		if(m_db->algo() == AlgorithmTypeEnum::ILP_GURBOI){
+			color_time<<"\n"<<m_db->input_gds();
+			total_time<<"\n"<<m_db->input_gds();
+		}
+		color_time<<t.format(2, "% %t  %  %w");
+		total_time<<total_timer.format(2, "% %t  %  %w");
+		myfile.close();
+		color_time.close();
+		total_time.close();
+	}
+
 #endif
 	this->outStat();
 	//this->writeJson();
@@ -1848,6 +1878,23 @@ void SimpleMPL::report() const
 	myfile << "Conflict number: "<<conflict_num()<<"\n";
 	myfile << "Stitch number: "<<stitch_count/2<<"\n";
 	myfile.close();
+	std::ofstream result;
+	if(m_db->use_stitch()){
+		result.open("result_w_stitch.txt",std::ofstream::app);
+		if(m_db->algo() == AlgorithmTypeEnum::ILP_GURBOI){
+			result<<"\n"<<m_db->input_gds();
+		}
+		result<<"&"<<conflict_num()<<"&"<<stitch_count/2<<"&"<<0.1*stitch_count/2 + conflict_num();
+	}
+	else{
+		result.open("result_wo_stitch.txt",std::ofstream::app);
+		if(m_db->algo() == AlgorithmTypeEnum::ILP_GURBOI){
+			result<<"\n"<<m_db->input_gds();
+		}
+		result<<"&"<<conflict_num();
+	}
+	result.close();
+
 #endif
 	mplPrint(kINFO, "Invalid color number : %d\n", count);
 	mplPrint(kINFO, "Invalid stitch number : %d\n", stitch_count/2);
@@ -2342,6 +2389,10 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 		
 		vSubColor.assign(num_vertices(sg), -1);
 
+#ifdef _OPENMP
+#pragma omp critical(dgGlobal2Local)
+#endif
+		{
 		for (std::map<uint32_t, uint32_t>::iterator it = dgGlobal2Local.begin(); it != dgGlobal2Local.end(); it++)
 		{
 			if (std::find(vSimpl2Orig.begin(), vSimpl2Orig.end(), it->second) != vSimpl2Orig.end())
@@ -2349,6 +2400,8 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 				dgCompId[it->first] = sub_comp_id + 1;
 			}
 		}
+		}
+
 		/***
 		if(fast_color_trial(vSubColor,sg))
 		{
@@ -2462,8 +2515,6 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 			}
 		#endif
 
-		 std::string name = std::to_string(comp_id) + "-" + std::to_string(sub_comp_id);
-		 this->writeJson(sg,(char*)name.c_str(),vSubColor);
 		delete pcs;
 	}
 
@@ -2486,6 +2537,10 @@ double SimpleMPL::solve_graph_coloring(uint32_t comp_id, SimpleMPL::graph_type c
 	// recover colors for simplified vertices with balanced assignment 
 	// recover hidden vertices with local balanced density control 
     RecoverHiddenVertexDistance(dg, itBgn, pattern_cnt, vColor, vHiddenVertices, m_vColorDensity, *m_db)();
+
+	//std::string name = std::to_string(comp_id) + "-" + std::to_string(sub_comp_id);
+	//std::string name = std::to_string(comp_id);
+	//this->writeJson(dg,(char*)name.c_str(),vColor);
     return acc_obj_value;
 }
 
@@ -3352,10 +3407,14 @@ uint32_t SimpleMPL::coloring_component(const std::vector<uint32_t>::const_iterat
 
 	std::set<vertex_descriptor> vdd_set;
 	construct_component_graph(itBgn, pattern_cnt, dg, mGlobal2Local, vColor, vdd_set, flag);
+#ifdef _OPENMP
+#pragma omp critical(dgGlobal2Local)
+#endif
+	{
+		std::map<uint32_t, uint32_t>().swap(dgGlobal2Local);
+		dgGlobal2Local.insert(mGlobal2Local.begin(), mGlobal2Local.end());
+	}
 
-	std::map<uint32_t, uint32_t>().swap(dgGlobal2Local);
-
-	dgGlobal2Local.insert(mGlobal2Local.begin(), mGlobal2Local.end());
 
     // for debug, it does not affect normal run 
 	if (comp_id == m_db->dbg_comp_id())
